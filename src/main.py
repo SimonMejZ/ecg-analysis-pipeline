@@ -13,14 +13,14 @@ def main():
     record = load_ecg_record(record_name=record_name)
 
     if record:
-        print("\n--- Data Loading Successful ---")
+        print("\n Data Loading Successful")
         print(f"Record: {record.record_name}, Sampling Freq: {record.fs} Hz")
 
         raw_signal = record.p_signal[:, 0]
         sampling_freq = record.fs
         
         #Filter Signal
-        print("\n--- Filtering Signal ---")
+        print("\n Filtering Signal")
         filtered_signal = filter_signal(
             signal=raw_signal, 
             fs=sampling_freq
@@ -30,7 +30,7 @@ def main():
         # The 'filtered_signal' variable now holds the cleaned data.
 
         # --- 3. Find R-Peaks ---
-        print("\n--- Finding R-Peaks ---")
+        print("\nFinding R-Peaks")
         r_peaks = find_r_peaks(
             signal=filtered_signal,
             fs=sampling_freq
@@ -38,23 +38,23 @@ def main():
         print(f"Detected {len(r_peaks)} R-peaks.")
 
         # --- 4. Calculate HRV Metrics ---
-        print("\n--- Calculating HRV Metrics ---")
+        print("\nCalculating HRV Metrics")
         hrv_metrics = extract_hrv_features(r_peaks=r_peaks, fs=sampling_freq)
         print("HRV calculation complete.")
 
         # --- 5. Beat Morphology (median beat per lead, 0.05 Hz high-pass preserves the ST segment) ---
-        print("\n--- Measuring Beat Morphology ---")
+        print("\nMeasuring Beat Morphology")
         diagnostic_signals = filter_signal(record.p_signal.T, sampling_freq, low_cut=0.05).T
         lead_names = [name.lower() for name in record.sig_name]
         morphology = extract_morphology_features(diagnostic_signals, lead_names, r_peaks, sampling_freq)
         print("Morphology measurement complete.")
 
-        print("\n--- Analysis Results ---")
+        print("\nAnalysis Results")
         for metric, value in {**hrv_metrics, **morphology}.items():
             print(f"{metric}: {value:.3f}")
         
     else:
-        print("\n--- Data Loading Failed. Exiting Pipeline. ---")
+        print("\nData Loading Failed. Exiting Pipeline.")
 
 
 if __name__ == "__main__":
