@@ -4,3 +4,6 @@ wfdb
 matplotlib
 jupyterlab
 requests
+biosppy
+pandas
+scikit-learn
