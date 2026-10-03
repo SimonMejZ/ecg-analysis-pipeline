@@ -1,4 +1,6 @@
-from processing import load_ecg_record, filter_signal, find_r_peaks, calculate_hrv_metrics # Helper functs.
+from processing import load_ecg_record, filter_signal, find_r_peaks # Helper functs.
+from hrv import extract_hrv_features
+from morphology import extract_morphology_features
 
 def main():
     """
@@ -7,7 +9,7 @@ def main():
     # --- Load Data ---
     # Define the record to analyze
   
-    record_name = 'patient001/s0010_re'
+    record_name = 'patient005/s0021are'
     record = load_ecg_record(record_name=record_name)
 
     if record:
@@ -37,12 +39,19 @@ def main():
 
         # --- 4. Calculate HRV Metrics ---
         print("\n--- Calculating HRV Metrics ---")
-        hrv_metrics = calculate_hrv_metrics(r_peaks=r_peaks, fs=sampling_freq)
+        hrv_metrics = extract_hrv_features(r_peaks=r_peaks, fs=sampling_freq)
         print("HRV calculation complete.")
-        
+
+        # --- 5. Beat Morphology (median beat per lead, 0.05 Hz high-pass preserves the ST segment) ---
+        print("\n--- Measuring Beat Morphology ---")
+        diagnostic_signals = filter_signal(record.p_signal.T, sampling_freq, low_cut=0.05).T
+        lead_names = [name.lower() for name in record.sig_name]
+        morphology = extract_morphology_features(diagnostic_signals, lead_names, r_peaks, sampling_freq)
+        print("Morphology measurement complete.")
+
         print("\n--- Analysis Results ---")
-        for metric, value in hrv_metrics.items():
-            print(f"{metric.upper()}: {value} ms")
+        for metric, value in {**hrv_metrics, **morphology}.items():
+            print(f"{metric}: {value:.3f}")
         
     else:
         print("\n--- Data Loading Failed. Exiting Pipeline. ---")
