@@ -1,0 +1,6 @@
+,roc_auc,balanced_accuracy,sensitivity,specificity,precision,f1
+HRV,0.792,0.723,0.78,0.667,0.911,0.84
+Morphology,0.957,0.888,0.93,0.846,0.964,0.946
+HRV + Morphology,0.954,0.867,0.927,0.808,0.955,0.94
+Age only (baseline),0.82,0.768,0.818,0.718,0.933,0.872
+HRV + Morphology (age >= 40 subset),0.913,0.784,0.926,0.643,0.969,0.947
