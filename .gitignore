@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 .DS_Store
 .gitkeep
+.vscode
 # C extensions
 *.so
 
@@ -193,3 +194,8 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
+# Cached PhysioNet PTB records (~1.8 GB, re-downloaded on demand)
+data/raw/ptbdb/
+
+# Trained models (regenerate with: python3 src/train_model.py)
+models/
